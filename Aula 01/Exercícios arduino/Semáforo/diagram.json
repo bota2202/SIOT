@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "author": "Anonymous maker",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard-mini", "id": "bb1", "top": 257.8, "left": 64.8, "attrs": {} },
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 19.8, "left": -183, "attrs": {} },
+    { "type": "wokwi-led", "id": "led1", "top": 236.4, "left": 61.4, "attrs": { "color": "red" } },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": 236.4,
+      "left": 90.2,
+      "attrs": { "color": "yellow" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led3",
+      "top": 236.4,
+      "left": 119,
+      "attrs": { "color": "limegreen" }
+    }
+  ],
+  "connections": [
+    [ "uno:10", "bb1:2t.a", "green", [ "v0" ] ],
+    [ "uno:GND.3", "bb1:1t.a", "black", [ "v0" ] ],
+    [ "led1:A", "bb1:2t.b", "", [ "$bb" ] ],
+    [ "led1:C", "bb1:1t.b", "", [ "$bb" ] ],
+    [ "led2:A", "bb1:5t.b", "", [ "$bb" ] ],
+    [ "led2:C", "bb1:4t.b", "", [ "$bb" ] ],
+    [ "led3:A", "bb1:8t.b", "", [ "$bb" ] ],
+    [ "led3:C", "bb1:7t.b", "", [ "$bb" ] ],
+    [ "uno:9", "bb1:5t.a", "green", [ "v0" ] ],
+    [ "uno:GND.2", "bb1:4t.a", "black", [ "v0" ] ],
+    [ "uno:GND.1", "bb1:7t.a", "black", [ "v0" ] ],
+    [ "uno:8", "bb1:8t.a", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
