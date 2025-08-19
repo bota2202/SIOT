@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "author": "OTÁVIO SATURNINO DA SILVA",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard-half", "id": "bb1", "top": 227.4, "left": -26, "attrs": {} },
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0.6, "left": -0.6, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 280,
+      "left": 148.2,
+      "rotate": 180,
+      "attrs": { "color": "red" }
+    }
+  ],
+  "connections": [
+    [ "led1:A", "bb1:18t.b", "", [ "$bb" ] ],
+    [ "led1:C", "bb1:19t.b", "", [ "$bb" ] ],
+    [ "uno:GND.3", "bb1:19t.a", "black", [ "v0" ] ],
+    [ "uno:9", "bb1:18t.a", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
