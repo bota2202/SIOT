@@ -1,23 +1,61 @@
-
-//Biblioteca do DTH
-#include "DHT.h"
-//armazena o valor flutuante de temperatura
-float temperatura;
-//porta usada e o tipo de sensor
-DHT dht(3, DHT11);
+// Definição de pinos
+const int ledVermelho = 8;
+const int ledAmarelo = 9;
+const int ledVerde = 10;
+const int ledPedestre = 11;
+const int botao = 2;
 
 void setup() {
-Serial.begin(9600);// inicializando o monitor serial
-dht.begin();// Inicializando o sensor
+  pinMode(ledVermelho, OUTPUT);
+  pinMode(ledAmarelo, OUTPUT);
+  pinMode(ledVerde, OUTPUT);
+  pinMode(ledPedestre, OUTPUT);
+  pinMode(botao, INPUT);
 }
 
 void loop() {
-delay(2000);// Aguarda dois segundos entre as leituras
-temperatura = dht.readTemperature();//Lê o valor da temperatura em C°
-
-//Verificando se existe erro na leitura da temperatura
-if (isnan(temperatura)) { Serial.println("ERRO NO SENSOR!");}
-//Se tudo funcionar envia a temperatura para a serial
-else {Serial.println(temperatura); /*em C°*/}
+  // Semáforo automático
+  digitalWrite(ledVerde, HIGH);
+  digitalWrite(ledAmarelo, LOW);
+  digitalWrite(ledVermelho, LOW);
+  digitalWrite(ledPedestre, LOW);
+  
+  if (lerBotao()) {
+    atravessarPedestre();
+  } else {
+    delay(5000); // verde 5s
+    digitalWrite(ledVerde, LOW);
+    digitalWrite(ledAmarelo, HIGH);
+    delay(2000); // amarelo 2s
+    digitalWrite(ledAmarelo, LOW);
+    digitalWrite(ledVermelho, HIGH);
+    delay(5000); // vermelho 5s
+  }
 }
-/*fim do código :)*/
+
+// Função para ler botão com debounce
+bool lerBotao() {
+  if (digitalRead(botao) == HIGH) {
+    delay(50); // debounce simples
+    if (digitalRead(botao) == HIGH) return true;
+  }
+  return false;
+}
+
+// Função que simula travessia do pedestre
+void atravessarPedestre() {
+  // Transito vermelho
+  digitalWrite(ledVerde, LOW);
+  digitalWrite(ledAmarelo, LOW);
+  digitalWrite(ledVermelho, HIGH);
+  
+  // Pedestre atravessando
+  digitalWrite(ledPedestre, HIGH);
+  
+  delay(5000); // tempo de travessia 5s
+  
+  digitalWrite(ledPedestre, LOW);
+  
+  // Retorna ao semáforo normal
+  digitalWrite(ledVermelho, LOW);
+}
