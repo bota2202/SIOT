@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle IoT</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+        .bloco { margin-bottom: 20px; }
+        .bloco h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        .bloco p { font-size: 1.2em; }
+        .luz { width: 100px; height: 100px; margin: 20px auto; border-radius: 50%; background-color: black; transition: 0.5s; }
+        .verde { background-color: #28a745; }
+        .amarelo { background-color: #ffc107; }
+        .vermelho { background-color: red; animation: piscar 1s infinite; }
+        .erro { background-color: #007bff; }
+        @keyframes piscar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        #alerta p { font-size: 1.2em; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Painel de Controle IoT</h1>
+
+        <div class="bloco">
+            <h2>Monitoramento de temperatura</h2>
+            <p>Temperatura: <span id="temp">--</span> &deg;C</p>
+            <p>Umidade: <span id="umid">--</span> %</p>
+        </div>
+
+        <div class="bloco">
+            <div class="luz" id="luz"></div>
+            <div id="alerta"><p></p></div>
+        </div>
+    </div>
+
+
+    <script>
+        function buscarDadosSensor() {
+            fetch('/get_data')
+                .then(response => response.json())
+                .then(data => {
+                    const luz = document.getElementById('luz');
+                    const alerta = document.getElementById('alerta').querySelector('p');
+
+                    if (data.error) {
+                        // Se houver erro vindo do Flask
+                        luz.className = "luz erro";
+                        alerta.innerText = "Erro ao ler sensor!";
+                        document.getElementById('temp').innerText = "--";
+                        document.getElementById('umid').innerText = "--";
+                        return;
+                    }
+
+                    const temp = data.temperatura;
+                    document.getElementById('temp').innerText = temp;
+                    document.getElementById('umid').innerText = data.umidade;
+
+                    // Lógica de cores e mensagens
+                    if (temp < 70) {
+                        luz.className = "luz verde";
+                        alerta.innerText = "Temperatura boa";
+                    } else if (temp >= 70 && temp < 90) {
+                        luz.className = "luz amarelo";
+                        alerta.innerText = "Atenção! Temperatura subindo";
+                    } else {
+                        luz.className = "luz vermelho";
+                        alerta.innerText = "Superaquecimento!";
+                    }
+                })
+                .catch(error => {
+                    // Se houver erro de conexão
+                    const luz = document.getElementById('luz');
+                    const alerta = document.getElementById('alerta').querySelector('p');
+                    luz.className = "luz erro";
+                    alerta.innerText = "Falha na conexão com o servidor!";
+                    document.getElementById('temp').innerText = "--";
+                    document.getElementById('umid').innerText = "--";
+                });
+        }
+
+        setInterval(buscarDadosSensor, 3000);
+        document.addEventListener('DOMContentLoaded', buscarDadosSensor);
+    </script>
+</body>
+</html>
